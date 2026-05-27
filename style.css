@@ -70,12 +70,57 @@ body{
     gap: 1rem;
     background-color: darkgray;
     padding: 1rem;
+    max-width: 700px;
 }
-.endeavor-item > .item-amount {
+/* Hide spin buttons for Chrome, Safari, Edge, and Opera */
+.item-amount::-webkit-outer-spin-button,
+.item-amount::-webkit-inner-spin-button {
+    height: 100%;
+    -webkit-appearance: none;
+    margin: 0;
+    border: 0;
+}
+
+.amount-wrapper {
+    display: flex;
+    align-items: stretch; /* 👈 Forces buttons and input to be exactly the same height */
+    height: 34px;
+    box-sizing: border-box;
+}
+
+.amount-btn {
+    cursor: pointer;
+    user-select: none;
+    width: 30px;
+    /* Remove height: 34px; let align-items: stretch handle it */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    font-weight: bold;
+    box-sizing: border-box; /* 👈 Crucial to prevent border bloating */
+}
+
+/* Fix the text input styling */
+.item-amount {
+    border-top: 1px solid #ccc;    /* Map borders individually to line up with buttons */
+    border-bottom: 1px solid #ccc;
+    border-left: none;             /* Remove inner double-borders between buttons */
+    border-right: none;
+
+    height: auto;                  /* 👈 Let flex stretching determine the exact height */
+    margin: 0;                     /* Strip browser default input margins */
+    padding: 0;                    /* Strip browser default input padding */
+
+    -moz-appearance: textfield;
+    appearance: textfield;
+    min-width: 40px;               /* Slightly widened so double digits fit nicely */
+    text-align: center;
+    box-sizing: border-box;        /* 👈 Absorbs borders inside the height calculation */
+
+    /* Keep field-sizing if you like it, but box-sizing: border-box will now tame it */
     field-sizing: content;
-    min-width: 30px;
-    max-height: 30px;
-    margin-left: auto;
 }
 
 .endeavor-item > .item-info {
@@ -92,6 +137,7 @@ body{
     display: inline-block;
     width: 60px;
     height: 34px;
+    margin-top: auto;
 }
 
 /* Hide default HTML checkbox */
@@ -159,8 +205,8 @@ input:checked + .slider:before {
 /* Container establishing relative boundaries */
 .icon-wrapper {
     position: relative;
-    width: 64px;
-    height: 64px;
+    width: 70px;
+    height: 70px;
     display: inline-block;
     flex-shrink: 0; /* Keeps layout stable inside flex containers */
 }
@@ -168,6 +214,9 @@ input:checked + .slider:before {
 /* Base item graphic */
 .item-icon {
     display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
 }
 
 /* Absolute position forcing the overlay to map exactly over the boundaries */
@@ -193,4 +242,20 @@ input:checked + .slider:before {
 .hq-overlay.active {
     opacity: 1;
     visibility: visible;
+}
+
+.right-side-wrapper{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-left: auto;
+}
+.delete-button{
+    align-self: flex-end;
+    margin-left: auto;
+    margin-bottom: auto;
+    width: 18px;
+    height: 18px;
+    border-radius: 0;
+    opacity: 100;
 }

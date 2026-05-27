@@ -5,36 +5,61 @@ function newEndeavorItem(itemName:string): HTMLDivElement{
     item.className = "endeavor-item";
 
     // amount
+    let amountWrapper = document.createElement("div");
+    amountWrapper.className = "amount-wrapper";
+
+    let minusBtn = document.createElement("div");
+    minusBtn.className = "amount-btn minus";
+    minusBtn.innerText = "−"; // Unicode minus sign look crisp
+
     let amount = document.createElement("input");
     amount.type = "number";
     amount.min = "0";
     amount.value = "1";
+    amount.className = "item-amount";
+
+    // Maintain your existing absolute cleanup logic on direct input entry
     amount.oninput = (evt) => {
         let tar = evt.currentTarget as HTMLInputElement;
         tar.value = (!!tar.value && Math.abs(parseInt(tar.value)) >= 0 ? Math.abs(parseInt(tar.value)) : 0).toString();
     }
-    amount.className = "item-amount";
 
-    // --- NEW: ICON WRAPPER WITH HQ OVERLAY ---
+    let plusBtn = document.createElement("div");
+    plusBtn.className = "amount-btn plus";
+    plusBtn.innerText = "+";
+
+    // Wire up the Minus Hook
+    minusBtn.onclick = () => {
+        let currentVal = parseInt(amount.value) || 0;
+        let minVal = parseInt(amount.min) || 0;
+        if (currentVal > minVal) {
+            amount.value = (currentVal - 1).toString();
+            // Trigger the oninput hook manually if other logic tracks edits live
+            amount.dispatchEvent(new Event('input'));
+        }
+    };
+
+    // Wire up the Plus Hook
+    plusBtn.onclick = () => {
+        let currentVal = parseInt(amount.value) || 0;
+        amount.value = (currentVal + 1).toString();
+        amount.dispatchEvent(new Event('input'));
+    };
+
+    // Stitch the stepper sequence together horizontally
+    amountWrapper.append(minusBtn, amount, plusBtn);
+    // ----------------------------------------------------;
+
+    // icon with hq overlay
     let iconWrapper = document.createElement("div");
     iconWrapper.className = "icon-wrapper";
-
     let itemIcon = document.createElement("img");
     itemIcon.className = "item-icon";
     itemIcon.src = "https://www.garlandtools.org/files/icons/item/7.png";
-    itemIcon.width = 64;
-    itemIcon.height = 64;
-
-// In your newEndeavorItem function, look for your overlay layout definition:
     let hqOverlay = document.createElement("img");
-    hqOverlay.className = "hq-overlay"; // No more '.hidden' class by default
+    hqOverlay.className = "hq-overlay";
     hqOverlay.src = "https://www.garlandtools.org/db/images/item/HQOverlay.png";
-    hqOverlay.width = 64;
-    hqOverlay.height = 64;
-
     iconWrapper.append(itemIcon, hqOverlay);
-
-    // Update the event trigger to toggle the '.active' state class:
 
     // name
     let itemNameText = document.createElement("span");
@@ -50,7 +75,6 @@ function newEndeavorItem(itemName:string): HTMLDivElement{
     qualitySlider.className = "slider";
     qualityToggle.append(qualityToggleInput, qualitySlider);
 
-    // --- NEW: HQ REAL-TIME EVENT TOGGLE ---
     qualityToggleInput.onchange = (evt) => {
         let checkbox = evt.currentTarget as HTMLInputElement;
         if (checkbox.checked) {
@@ -59,16 +83,34 @@ function newEndeavorItem(itemName:string): HTMLDivElement{
             hqOverlay.classList.remove("active"); // Fades out smoothly
         }
     };
-    // --------------------------------------
+
 
     // info block
-    let itemInfo = document.createElement("div");
-    itemInfo.className = "item-info";
-    itemInfo.append(itemNameText);
-    itemInfo.append(qualityToggle);
+    let itemInfoWrapper = document.createElement("div");
+    itemInfoWrapper.className = "item-info";
+    itemInfoWrapper.append(itemNameText);
+    itemInfoWrapper.append(qualityToggle);
 
-    // Append the container wrapper instead of just the lone raw icon img
-    item.append(iconWrapper, itemInfo, amount);
+    //delete button
+    let deleteIcon = document.createElement("img");
+    deleteIcon.className = "delete-button";
+    deleteIcon.src = "remove.png";
+    deleteIcon.width = 16;
+    deleteIcon.height = 16;
+    deleteIcon.onclick = () => {
+        let endeavorElement = document.querySelector("#endeavor") as HTMLElement;
+        item.remove();
+        requestButtonsPresence(endeavorElement);
+    }
+
+
+    //right side wrapper
+    let rightSideWrapper = document.createElement("div");
+    rightSideWrapper.className = "right-side-wrapper";
+    rightSideWrapper.append(deleteIcon, amountWrapper);
+
+
+    item.append(iconWrapper, itemInfoWrapper, rightSideWrapper);
     return item;
 }
 
@@ -124,29 +166,23 @@ function requestButtonsPresence(itemsElement: HTMLElement){
     let children = itemsElement.children;
     let items = Array.from(children) as HTMLDivElement[];
     let buttonsPresent = false
-    let fieldsParent = itemsElement.parentElement as HTMLElement;
+    let endeavorElement = document.getElementById("endeavor") as HTMLElement;
     let buttons = document.getElementById("item-buttons") as HTMLElement;
-    let deleteItemButton = buttons.querySelector("#remove-item") as HTMLButtonElement;
     let submitRequestButton = buttons.querySelector("#submit-request") as HTMLButtonElement;
-    if (submitRequestButton != null && deleteItemButton != null){
+    if (submitRequestButton != null){
         buttonsPresent = true;
     }
     console.log(buttonsPresent)
     if (items.length > 0 && !buttonsPresent){
-        let deleteItemButton = document.createElement("button");
-        deleteItemButton.innerText = "Remove Item";
-        deleteItemButton.id = "remove-item";
-        deleteItemButton.addEventListener("click", removeItemHandler);
         let submitRequestButton = document.createElement("button");
         submitRequestButton.innerText = "Submit";
         submitRequestButton.id = "submit-request";
         submitRequestButton.addEventListener("click", submitHandler);
-        buttons.append(deleteItemButton, submitRequestButton);
+        buttons.append(submitRequestButton);
     }
     if (items.length == 0 && buttonsPresent){
-        if (deleteItemButton){
-            deleteItemButton.removeEventListener("click", removeItemHandler);
-            deleteItemButton.remove();
+        if (endeavorElement){
+            endeavorElement.remove();
         }
         if (submitRequestButton) {
             submitRequestButton.removeEventListener("click", submitHandler);
@@ -213,7 +249,6 @@ async function submitHandler(evt: MouseEvent){
         // ==========================================
         // The 'finally' block ALWAYS runs whether the request succeeded or crashed
         button.disabled = false;
-        button.innerText = "Calculate Profit";
 
         // let spinner = document.getElementById("loading-spinner");
         // spinner.classList.add("hidden");
