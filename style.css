@@ -8,6 +8,7 @@ body{
     display: flex;
     flex-direction: column;
     width: 60%;
+    position: relative;
 }
 
 #request {
@@ -258,4 +259,47 @@ input:checked + .slider:before {
     height: 18px;
     border-radius: 0;
     opacity: 100;
+}
+
+.loading-blur{
+    filter: blur(2px);
+    pointer-events: none;
+}
+
+.loader {
+    display: inline-block;
+
+    /* 🌍 Pins the element relative to the browser window itself */
+    position: fixed;
+    top: 15%;             /* Adjust this percentage to control vertical offset from screen top */
+    left: 50%;
+    z-index: 9999;        /* Floats over absolutely everything on the web page */
+
+    /* Center it horizontally and retain your 3D transform layer */
+    transform: translateX(-50%) translateZ(1px);
+}
+.loader:after {
+    content: '';
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    margin: 8px;
+    border-radius: 50%;
+    background: #fff;
+    animation: coin-flip 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+@keyframes coin-flip {
+    0%, 100% {
+        animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5);
+    }
+    0% {
+        transform: rotateY(0deg);
+    }
+    50% {
+        transform: rotateY(1800deg);
+        animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1);
+    }
+    100% {
+        transform: rotateY(3600deg);
+    }
 }

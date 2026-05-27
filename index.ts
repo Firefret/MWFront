@@ -219,6 +219,9 @@ async function submitHandler(evt: MouseEvent){
     let worldName = worldElement.value;
     console.log(worldName);
     console.log(itemList);
+    let spinner = document.createElement("span");
+    spinner.className = "loader";
+    let endeavorElement = document.getElementById("endeavor") as HTMLElement;
     try {
         let buttons = document.getElementById("item-buttons") as HTMLElement;
         // ==========================================
@@ -226,10 +229,11 @@ async function submitHandler(evt: MouseEvent){
         // ==========================================
         button.disabled = true; // Prevent double-clicking while waiting
         button.innerText = "Fetching...";
+        endeavorElement.classList.add("loading-blur");
 
-        // Optional: Show a hidden spinner element on your overlay
-        // let spinner = document.getElementById("loading-spinner");
-        // spinner.classList.remove("hidden");
+
+        let globalContainer = document.getElementById("global-container") as HTMLElement;
+        globalContainer.append(spinner);
 
         // ==========================================
         // 2. PHASE TWO: THE WAIT
@@ -248,7 +252,9 @@ async function submitHandler(evt: MouseEvent){
         // 3. PHASE THREE: CLEANUP / STOP LOADING
         // ==========================================
         // The 'finally' block ALWAYS runs whether the request succeeded or crashed
-        button.disabled = false;
+        button.remove()
+        endeavorElement.remove();
+        spinner.remove();
 
         // let spinner = document.getElementById("loading-spinner");
         // spinner.classList.add("hidden");
