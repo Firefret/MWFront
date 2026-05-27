@@ -1,0 +1,196 @@
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#global-container {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+}
+
+#request {
+    /* Turns the container into a flexbox layout */
+    display: flex;
+
+    /* Stacks all child elements vertically */
+    flex-direction: row;
+
+    /* Left-aligns items. Change to 'center' if you want them centered */
+    align-items: flex-start;
+
+    /* Puts exactly 1rem (usually 16px) of space between every single child element */
+    gap: 1rem;
+
+    /* Optional: Adds padding around the inside border of the main container itself */
+    padding: 1.5rem;
+
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Optional: Ensures inputs, textareas, and buttons span the full width if needed */
+#request > #fields > input{
+    width: 100%;
+    box-sizing: border-box; /* Prevents padding from breaking the 100% width */
+}
+#request > button {
+    width: 30%;
+}
+
+#item-buttons
+{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    box-sizing: border-box;
+}
+
+#fields {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#endeavor {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem 1.5rem 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: lightgray;
+}
+
+.endeavor-item {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    background-color: darkgray;
+    padding: 1rem;
+}
+.endeavor-item > .item-amount {
+    field-sizing: content;
+    min-width: 30px;
+    max-height: 30px;
+    margin-left: auto;
+}
+
+.endeavor-item > .item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+
+input:checked + .slider {
+    background-color: #30af00;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #30af00;
+}
+
+/* The slider knob */
+.slider:before {
+    position: absolute;
+    content: "LQ"; /* 👈 Set initial text */
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+
+    /* --- Centering the Text inside the Knob --- */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* --- Typography Styling --- */
+    font-family: sans-serif; /* Change to your app's font family */
+    font-size: 10px;
+    font-weight: bold;
+    color: #333; /* Color of the text inside the white knob */
+    text-transform: uppercase;
+}
+
+/* When checked: Move the knob AND change the text */
+input:checked + .slider:before {
+    content: "HQ"; /* 👈 Swaps the text when active */
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Container establishing relative boundaries */
+.icon-wrapper {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    display: inline-block;
+    flex-shrink: 0; /* Keeps layout stable inside flex containers */
+}
+
+/* Base item graphic */
+.item-icon {
+    display: block;
+}
+
+/* Absolute position forcing the overlay to map exactly over the boundaries */
+.hq-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    mix-blend-mode: screen;
+
+    /* ✨ 1. INITIAL STATE: Invisible and hidden from mouse/screen readers */
+    opacity: 0;
+    visibility: hidden;
+
+    /* ✨ 2. THE ANIMATION GEARS: Transition opacity and visibility over 0.3 seconds */
+    transition: opacity 0.15s ease-out, visibility 0.15s ease-out;
+}
+
+/* ✨ 3. TARGET STATE: When this class is added, smoothly animate to full visibility */
+.hq-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}

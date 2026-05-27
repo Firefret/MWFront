@@ -1,0 +1,9 @@
+# Project exclude paths
+/index.d.ts
+/index.d.ts.map
+/index.js
+/index.js.map
+/requests.d.ts
+/requests.d.ts.map
+/requests.js
+/requests.js.map
