@@ -128,26 +128,43 @@ function itemTestAutofill(datalist: HTMLInputElement){
     })
 }
 
+function isItemExists(itemName: string): HTMLSpanElement[]{
+    let itemList = Array.from(document.querySelectorAll("#endeavor .item-name")) as HTMLSpanElement[];
+    return itemList.filter(item => item.innerText == itemName) as HTMLSpanElement[];
+}
+
 function addItemHandler(evt: MouseEvent){
     let button = evt.currentTarget as HTMLButtonElement;
     let itemSearch = document.getElementById("item-search") as HTMLInputElement;
     let itemName = itemSearch.value;
     if (itemName == "") return;
-    let item = newEndeavorItem(itemName);
     let buttonParent = button.parentElement as HTMLElement;
     let requestElement = buttonParent.parentElement as HTMLElement;
     let endeavorElement = document.querySelector("#endeavor") as HTMLElement;
-    if (!endeavorElement){
+    if (!endeavorElement) {
         endeavorElement = document.createElement("div");
         endeavorElement.id = "endeavor";
+        let endeavorWrapper = document.createElement("div");
+        endeavorWrapper.id = "endeavor-wrapper";
+        endeavorWrapper.append(endeavorElement);
         let container = document.getElementById("global-container") as HTMLElement;
-        container.append(endeavorElement);
+        container.append(endeavorWrapper);
     }
-    let itemList = Array.from(endeavorElement.children).filter(child => child.className == "endeavor-item") as HTMLInputElement[];
-    item.id = "item-" + itemList.length;
+    let existingItem = isItemExists(itemName);
+    if (isItemExists(itemName).length > 0){
+        let nameElement = existingItem[0] as HTMLSpanElement;
+        let itemDataWrapper = nameElement.parentElement as HTMLDivElement;
+        let item = itemDataWrapper.parentElement as HTMLDivElement;
+        let amount = item.querySelector(".item-amount") as HTMLInputElement;
+        amount.value = (parseInt(amount.value) + 1).toString();
+    }
+    else{
+        let itemList = Array.from(endeavorElement.children).filter(child => child.className == "endeavor-item") as HTMLInputElement[];
+        let item = newEndeavorItem(itemName);
+        item.id = "item-" + itemList.length;
+        endeavorElement.append(item)
+    }
 
-
-    endeavorElement.append(item)
     itemSearch.value = "";
     requestButtonsPresence(endeavorElement)
 }
@@ -183,6 +200,8 @@ function requestButtonsPresence(itemsElement: HTMLElement){
     if (items.length == 0 && buttonsPresent){
         if (endeavorElement){
             endeavorElement.remove();
+            let wrapper = document.getElementById("endeavor-wrapper") as HTMLElement;
+            wrapper.remove();
         }
         if (submitRequestButton) {
             submitRequestButton.removeEventListener("click", submitHandler);
@@ -222,42 +241,26 @@ async function submitHandler(evt: MouseEvent){
     let spinner = document.createElement("span");
     spinner.className = "loader";
     let endeavorElement = document.getElementById("endeavor") as HTMLElement;
+    let endeavorWrapper = document.getElementById("endeavor-wrapper") as HTMLElement;
     try {
-        let buttons = document.getElementById("item-buttons") as HTMLElement;
-        // ==========================================
-        // 1. PHASE ONE: START LOADING
-        // ==========================================
-        button.disabled = true; // Prevent double-clicking while waiting
+        button.disabled = true;
         button.innerText = "Fetching...";
         endeavorElement.classList.add("loading-blur");
+        endeavorWrapper.prepend(spinner);
 
-
-        let globalContainer = document.getElementById("global-container") as HTMLElement;
-        globalContainer.append(spinner);
-
-        // ==========================================
-        // 2. PHASE TWO: THE WAIT
-        // ==========================================
-        // The browser freezes right here, showing the loading text/disabled button
         let endeavor = await newEndeavor(itemList, worldName)
         console.log(endeavor);
 
-        // Render your ordeal list UI here using the 'endeavor' payload
 
     } catch (error) {
         console.error("Endeavor failed:", error);
         alert("Something went wrong calculating market values.");
     } finally {
-        // ==========================================
-        // 3. PHASE THREE: CLEANUP / STOP LOADING
-        // ==========================================
-        // The 'finally' block ALWAYS runs whether the request succeeded or crashed
         button.remove()
         endeavorElement.remove();
         spinner.remove();
+        endeavorWrapper.remove()
 
-        // let spinner = document.getElementById("loading-spinner");
-        // spinner.classList.add("hidden");
     }
 }
 

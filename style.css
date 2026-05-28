@@ -266,17 +266,30 @@ input:checked + .slider:before {
     pointer-events: none;
 }
 
+/* 1. The Wrapper Container (Must have position: relative) */
+#endeavor-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+/* 2. The Loader Component */
 .loader {
     display: inline-block;
 
-    /* 🌍 Pins the element relative to the browser window itself */
-    position: fixed;
-    top: 15%;             /* Adjust this percentage to control vertical offset from screen top */
-    left: 50%;
-    z-index: 9999;        /* Floats over absolutely everything on the web page */
+    /* 🚀 THE PERFECT OVERLAY CONFIGURATION */
+    position: absolute;
+    left: 50%;            /* Aligns its left edge to the center line of the wrapper */
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%) translateZ(1px);
 
-    /* Center it horizontally and retain your 3D transform layer */
-    transform: translateX(-50%) translateZ(1px);
+
+    z-index: 10;          /* Forces it to float on top of the blurred content */
+
+    /* Clear out the old sticky/margin/padding experiments */
+    height: auto;
+    overflow: visible;
+    margin: 0;
+    padding: 0;
 }
 .loader:after {
     content: '';
