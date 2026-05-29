@@ -1,4 +1,5 @@
 import {newEndeavor} from "./requests.js";
+import type {Endeavor, Wishlist} from "./types.js";
 
 function newEndeavorItem(itemName:string): HTMLDivElement{
     let item = document.createElement("div");
@@ -231,9 +232,63 @@ function formItemList(): {name: string, amount: number}[]{
     })
 }
 
+function populateWishlist(wishlist: Wishlist, element: HTMLDivElement){
+    let entries = wishlist.entries;
+    let wishlistItemList = document.createElement("div");
+    wishlistItemList.className = "wishlist-items";
+    let wishlistHeader = document.createElement("div");
+    wishlistHeader.className = "wishlist-header";
+    wishlistHeader.innerText = "Wishlist";
+
+    for (const [key, value] of Object.entries(entries)) {
+        let item = document.createElement("div");
+        item.className = "wishlist-item";
+        let itemName = document.createElement("span");
+        itemName.innerText = key;
+        itemName.className = "item-name";
+
+        let itemAmount = document.createElement("span");
+        itemAmount.className = "item-amount";
+        itemAmount.innerText = value.amount.toString();
+
+        let itemQuality = document.createElement("span");
+        itemQuality.className = "item-quality";
+        itemQuality.innerText = value.quality ? "HQ" : "NQ";
+
+        let itemIcon = document.createElement("img");
+        itemIcon.src = value.item.icon_url
+        itemIcon.className = "item-icon";
+
+        item.append(itemIcon, itemName, itemQuality, itemAmount);
+        wishlistItemList.append(item);
+    }
+    element.append(wishlistHeader, wishlistItemList);
+}
+
+function postEndeavor(response: any){
+    let endeavor = response.endeavor as Endeavor;
+    let wishlist = endeavor.wishlist;
+
+    let container = document.getElementById("global-container") as HTMLElement;
+    let postEndeavorWrapper = document.createElement("div");
+    postEndeavorWrapper.id = "post-endeavor-wrapper";
+    let postEndeavorElement = document.createElement("div");
+    postEndeavorElement.id = "post-endeavor";
+    postEndeavorWrapper.append(postEndeavorElement);
+
+    let wishlistElement = document.createElement("div");
+    wishlistElement.id = "wishlist";
+    populateWishlist(wishlist, wishlistElement);
+
+
+    postEndeavorElement.append(wishlistElement);
+    container.append(postEndeavorWrapper);
+}
+
 async function submitHandler(evt: MouseEvent){
     let itemList = formItemList()
     let button = evt.currentTarget as HTMLButtonElement;
+    let addItemButton = document.getElementById("add-item") as HTMLButtonElement;
     let worldElement = document.getElementById("world-name") as HTMLInputElement;
     let worldName = worldElement.value;
     console.log(worldName);
@@ -244,18 +299,20 @@ async function submitHandler(evt: MouseEvent){
     let endeavorWrapper = document.getElementById("endeavor-wrapper") as HTMLElement;
     try {
         button.disabled = true;
-        button.innerText = "Fetching...";
+        addItemButton.disabled = true;
         endeavorElement.classList.add("loading-blur");
         endeavorWrapper.prepend(spinner);
 
         let endeavor = await newEndeavor(itemList, worldName)
         console.log(endeavor);
-
+        postEndeavor(endeavor);
+        addItemButton.removeEventListener("click", addItemHandler); //change it to another handler later
 
     } catch (error) {
         console.error("Endeavor failed:", error);
         alert("Something went wrong calculating market values.");
     } finally {
+        addItemButton.disabled = false;
         button.remove()
         endeavorElement.remove();
         spinner.remove();
