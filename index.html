@@ -3,26 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Mogul Widget</title>
+    <link rel="stylesheet" href="normalize.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="postEndeavor.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap" rel="stylesheet">
 </head>
+<header>
+    <div id="header-wrapper">
+        <div id="logo">Mogul Widget</div>
+        <div id="request">
+            <div id="search-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search global-search-input-icon" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
+                <input list ="items" id="item-search" placeholder="Enter the name of an item...">
+                <datalist id="items">
+
+                </datalist>
+            </div>
+
+            <label for="world-name">
+                World:
+                <input type="text" id="world-name" value="Raiden">
+            </label>
+            <div id="item-buttons"><button id="add-item">Add Item</button></div>
+
+        </div>
+    </div>
+</header>
 <body>
 <div id="global-container">
-<div id="request">
-    <label for="world-name">
-        World:
-        <input type="text" id="world-name" value="Raiden">
-    </label>
-    <label for="item-search">
-        Enter item name:
-    </label>
-    <input list ="items" name="item-search" id="item-search">
-    <datalist id="items">
 
-    </datalist>
-    <div id="item-buttons"><button id="add-item">Add Item</button></div>
-
-</div>
 </div>
 </body>
 <script type="module" src="index.js"></script>

@@ -1,16 +1,147 @@
+html{
+    background-color: #0d1119;
+    --bg-grad-1: #0d1119;
+    --bg-grad-2: #162032;
+    --bg-grad-3: #090d14;
+    --surface-1: #141b29;
+    --surface-2: #1b2435;
+    --surface-3: #202b3f;
+    --line: #2f3e59;
+    --line-soft: #3a4b6a;
+    --text-primary: #eaf0fd;
+    --text-secondary: #c4d0e6;
+    --text-muted: #93a3bf;
+    --text-heading: #f5c47a;
+    --accent: #e29f48;
+    --accent-strong: #f1bc67;
+    --accent-ink: #1f1306;
+    --font-heading: "Cinzel", "Cinzel Fallback";
+
+    height: 100%;
+    margin: 0;
+}
+
+header{
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    height: 70px;
+    flex-direction: row;
+    align-items: center;
+    background-color: #0a0e16b8;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--line);
+    justify-content: center;
+
+}
+
+#header-wrapper{
+    position: relative;
+    align-self: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1600px;
+}
+
+#search-wrapper{
+    gap: .4rem;
+    min-height: 1.98rem;
+    padding: 0 .48rem;
+    display: flex;
+    border: 1px solid var(--line-soft);
+    border-radius: .66rem;
+    align-items: center;
+    color: var(--text-primary);
+    background-color: var(--surface-1);
+    stroke: var(--text-muted);
+    width: 100%;
+    max-width: 700px;
+}
+
+#search-wrapper > input{
+    color: var(--text-muted);
+    background: 0 0;
+    border: none;
+    outline: none;
+    flex: auto;
+    width: 100%;
+    font-size: .86rem;
+}
+#search-wrapper:focus-within{
+    border-color: var(--accent);
+    transition: border-color 0.4s ease-in-out;
+}
+#search-wrapper:not(:focus-within){
+    border-color: var(--line-soft);
+    transition: border-color 0.2s ease-in-out;
+}
+#search-wrapper > input:focus{
+    color: var(--text-primary);
+}
+#search-wrapper > input::placeholder{
+    color: var(--text-muted);
+}
+
+
+#logo{
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 2rem;
+    font-style: normal;
+    font-optical-sizing: auto;
+    padding-left: 1rem;
+}
+
 body{
     display: flex;
     flex-direction: column;
     align-items: center;
     font-family: Futura, sans-serif;
+    background: radial-gradient(circle at 14% 18%,
+    color-mix(in srgb, var(--bg-grad-3) 70%, transparent) 0, transparent 42%), radial-gradient(circle at 87% 24%,
+    color-mix(in srgb, var(--accent) 18%, transparent) 0, transparent 34%), linear-gradient(160deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 60%, var(--bg-grad-3) 100%);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 #global-container {
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    width: 60%;
+    width: 100%;
+    max-width: 1600px;
     position: relative;
+    margin: 0;
+    min-height: 100vh;
+    /*background-color: #181b22;
+
+     Creates a faint 24px grid matching your border colors
+    background-image:
+            linear-gradient(to right, rgba(81, 97, 108, 0.07) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(81, 97, 108, 0.07) 1px, transparent 1px);
+    background-size: 24px 24px; */
+
 }
+
+#global-container::before {
+        content: '';
+        position: absolute;
+        top: 15%;
+        left: 20%;
+        width: 600px;
+        height: 600px;
+        /* Matches your orange/amber accent theme at a tiny 3% opacity */
+        /*background: radial-gradient(circle, rgba(230, 140, 10, 0.03) 0%, transparent 70%);*/
+        filter: blur(100px);
+        pointer-events: none;
+        z-index: -1;
+    }
+
 
 #request {
     /* Turns the container into a flexbox layout */
@@ -73,6 +204,7 @@ body{
     background-color: darkgray;
     padding: 1rem;
     max-width: 700px;
+    border-radius: 10px;
 }
 /* Hide spin buttons for Chrome, Safari, Edge, and Opera */
 .item-amount::-webkit-outer-spin-button,
@@ -102,6 +234,16 @@ body{
     border: 1px solid #ccc;
     font-weight: bold;
     box-sizing: border-box; /* 👈 Crucial to prevent border bloating */
+}
+
+.minus{
+    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px;
+}
+
+.plus{
+    border-bottom-right-radius: 6px;
+    border-top-right-radius: 6px;
 }
 
 /* Fix the text input styling */
@@ -151,6 +293,7 @@ body{
 
 /* The slider */
 .slider {
+    border-radius: 6px;
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -164,15 +307,16 @@ body{
 
 
 input:checked + .slider {
-    background-color: #30af00;
+    background-color: #ff9f28;
 }
 
 input:focus + .slider {
-    box-shadow: 0 0 1px #30af00;
+    box-shadow: 0 0 1px #ff9f28;
 }
 
 /* The slider knob */
 .slider:before {
+    border-radius: 6px;
     position: absolute;
     content: "LQ"; /* 👈 Set initial text */
     height: 26px;
@@ -198,6 +342,7 @@ input:focus + .slider {
 
 /* When checked: Move the knob AND change the text */
 input:checked + .slider:before {
+    color: #cc8624;
     content: "HQ"; /* 👈 Swaps the text when active */
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
@@ -216,18 +361,18 @@ input:checked + .slider:before {
 /* Base item graphic */
 .item-icon {
     display: block;
-    width: 100%;
-    height: auto;
     object-fit: cover;
+    width:80px;
+    height: 80px;
 }
 
 /* Absolute position forcing the overlay to map exactly over the boundaries */
 .hq-overlay {
+    top:1px;
+    left:1px;
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    width: 80px;
+    height: 80px;
     pointer-events: none;
     z-index: 2;
     mix-blend-mode: screen;
@@ -253,13 +398,17 @@ input:checked + .slider:before {
     margin-left: auto;
 }
 .delete-button{
+    filter: contrast(10);
     align-self: flex-end;
     margin-left: auto;
     margin-bottom: auto;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 0;
     opacity: 100;
+}
+.delete-button:hover{
+    filter: contrast(50) brightness(30) drop-shadow(0 0 10px #dc1818);
 }
 
 .loading-blur{
@@ -295,9 +444,9 @@ input:checked + .slider:before {
 .loader:after {
     content: '';
     display: inline-block;
-    width: 48px;
-    height: 48px;
-    margin: 8px;
+    width: 46px;
+    height: 46px;
+    margin: 6px;
     border-radius: 50%;
     background: #fff;
     animation: coin-flip 2.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;

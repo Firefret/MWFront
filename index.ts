@@ -243,23 +243,121 @@ function populateWishlist(wishlist: Wishlist, element: HTMLDivElement){
     for (const [key, value] of Object.entries(entries)) {
         let item = document.createElement("div");
         item.className = "wishlist-item";
-        let itemName = document.createElement("span");
-        itemName.innerText = key;
-        itemName.className = "item-name";
 
-        let itemAmount = document.createElement("span");
-        itemAmount.className = "item-amount";
-        itemAmount.innerText = value.amount.toString();
 
-        let itemQuality = document.createElement("span");
-        itemQuality.className = "item-quality";
-        itemQuality.innerText = value.quality ? "HQ" : "NQ";
-
+        // icon with hq overlay
+        let iconWrapper = document.createElement("div");
+        iconWrapper.className = "icon-wrapper";
         let itemIcon = document.createElement("img");
-        itemIcon.src = value.item.icon_url
         itemIcon.className = "item-icon";
+        itemIcon.src = value.item.icon_url
+        let hqOverlay = document.createElement("img");
+        hqOverlay.className = "hq-overlay";
+        hqOverlay.src = "https://www.garlandtools.org/db/images/item/HQOverlay.png";
+        iconWrapper.append(itemIcon, hqOverlay);
 
-        item.append(itemIcon, itemName, itemQuality, itemAmount);
+
+        // name
+        let itemNameText = document.createElement("span");
+        itemNameText.innerText = key;
+        itemNameText.className = "item-name";
+
+        // quality, should have an api endpoint in the future
+        let qualityToggle = document.createElement("label");
+        qualityToggle.className = "switch";
+        let qualityToggleInput = document.createElement("input");
+        qualityToggleInput.type = "checkbox";
+        let qualitySlider = document.createElement("span");
+        qualitySlider.className = "slider";
+        qualityToggleInput.checked = value.quality;
+        if (qualityToggleInput.checked){
+            hqOverlay.classList.add("active");
+        }
+        qualityToggle.append(qualityToggleInput, qualitySlider);
+
+        qualityToggleInput.onchange = (evt) => {
+            let checkbox = evt.currentTarget as HTMLInputElement;
+            if (checkbox.checked) {
+                hqOverlay.classList.add("active"); // Fades in smoothly
+            } else {
+                hqOverlay.classList.remove("active"); // Fades out smoothly
+            }
+        };
+
+
+        // info block
+        let itemInfoWrapper = document.createElement("div");
+        itemInfoWrapper.className = "item-info";
+        itemInfoWrapper.append(itemNameText);
+        itemInfoWrapper.append(qualityToggle);
+
+
+        //amount, should have an api endpoint in the future
+        let amountWrapper = document.createElement("div");
+        amountWrapper.className = "amount-wrapper";
+
+        let minusBtn = document.createElement("div");
+        minusBtn.className = "amount-btn minus";
+        minusBtn.innerText = "−"; // Unicode minus sign look crisp
+
+        let amount = document.createElement("input");
+        amount.type = "number";
+        amount.min = "0";
+        amount.value = "1";
+        amount.className = "item-amount";
+
+        // Maintain your existing absolute cleanup logic on direct input entry
+        amount.oninput = (evt) => {
+            let tar = evt.currentTarget as HTMLInputElement;
+            tar.value = (!!tar.value && Math.abs(parseInt(tar.value)) >= 0 ? Math.abs(parseInt(tar.value)) : 0).toString();
+        }
+
+        let plusBtn = document.createElement("div");
+        plusBtn.className = "amount-btn plus";
+        plusBtn.innerText = "+";
+
+        //
+        minusBtn.onclick = () => {
+            let currentVal = parseInt(amount.value) || 0;
+            let minVal = parseInt(amount.min) || 0;
+            if (currentVal > minVal) {
+                amount.value = (currentVal - 1).toString();
+                // Trigger the oninput hook manually if other logic tracks edits live
+                amount.dispatchEvent(new Event('input'));
+            }
+        };
+
+        // Wire up the Plus Hook
+        plusBtn.onclick = () => {
+            let currentVal = parseInt(amount.value) || 0;
+            amount.value = (currentVal + 1).toString();
+            amount.dispatchEvent(new Event('input'));
+        };
+
+        // Stitch the stepper sequence together horizontally
+        amountWrapper.append(minusBtn, amount, plusBtn);
+        // ----------------------------------------------------;
+
+        //delete button, should have an api endpoint in the future
+        let deleteIcon = document.createElement("img");
+        deleteIcon.className = "delete-button";
+        deleteIcon.src = "remove.png";
+        deleteIcon.width = 16;
+        deleteIcon.height = 16;
+        deleteIcon.onclick = () => {
+            let wishlistElement = document.querySelector(".wishlist-items") as HTMLElement;
+            //disabled for the time being, api wiring goes here
+            //item.remove();
+            //requestButtonsPresence(wishlistElement);
+        }
+
+        //delete button and amount wrapper
+        let rightSideWrapper = document.createElement("div");
+        rightSideWrapper.className = "right-side-wrapper";
+        rightSideWrapper.append(deleteIcon, amountWrapper);
+
+
+        item.append(iconWrapper, itemInfoWrapper, rightSideWrapper);
         wishlistItemList.append(item);
     }
     element.append(wishlistHeader, wishlistItemList);

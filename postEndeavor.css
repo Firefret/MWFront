@@ -1,29 +1,90 @@
-.wishlist-header {
-    color: #ff9f28;
-    background-color: #3a3838;
-    font-size: 1.5rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 1rem;
+#wishlist{
+
 }
 
+.wishlist-header {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background-color: #24272e;       /* Matches main box background */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    /* Spacing: Add extra padding to the right side for the angle zone */
+    padding: 0.75rem 1.5rem 0.3rem 1.5rem;
+    border: 1px solid #5d637b;
+    border-bottom: none;
+    color: #f0f1f3;
+    font-weight: 500;
+    z-index: 2;
+    mask-repeat: no-repeat;
+}
+
+.wishlist-header::after{
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px; /* This controls your bottom border thickness */
+
+        /* Your gradient engine */
+        background: linear-gradient(to right, rgba(255, 194, 61, 1) 0%, rgba(224, 151, 61, 1) 47%, rgba(66, 52, 37, 1) 92%, rgba(36, 39, 46, 1) 100%);
+    }
+
+
+
 .wishlist-items {
+    border: 1px solid #5d637b;
     padding: 0.5rem;
-    background-color: #474545;
+    background-color: #24272e;
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .wishlist-item {
+    border-style: solid;
+    border-color: #5d637b;
+    border-width: 1px;
+    background-color: #374351;
     display: flex;
     flex-direction: row;
     gap: 1rem;
-    background-color: darkgray;
     padding: 1rem;
     max-height: 100px;
+    border-radius: 10px;
+}
+
+.wishlist-item > .item-info{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+.wishlist-item > .item-info > .item-name{
+    color: #cccccc;
+    padding: 10px;
+    background-color: #292e33;
+    max-height: 70px;
+    border-radius: 6px;
+}
+
+.wishlist-item > .icon-wrapper{
+    padding: 1px;
+    border-style: solid;
+    border-color: #5d637b;
+    border-width: 1px;
+    border-radius: 6px;
+    position: relative;
+    width: 80px;
+    height: 80px;
+    display: inline-block;
+    flex-shrink: 0;
 }
 
 #post-endeavor{
@@ -33,5 +94,4 @@
     padding: 2rem 1.5rem 1.5rem;
     width: 100%;
     box-sizing: border-box;
-    background-color: lightgray;
 }
