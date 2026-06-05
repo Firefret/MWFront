@@ -15,9 +15,11 @@ html{
     --accent: #e29f48;
     --accent-strong: #f1bc67;
     --accent-ink: #1f1306;
+    --shadow: #00000059;
     --font-heading: "Cinzel", "Cinzel Fallback";
+    --content-max-width: 1600px;
 
-    height: 100%;
+    min-height: 100%;
     margin: 0;
 }
 
@@ -25,7 +27,7 @@ header{
     box-sizing: border-box;
     display: flex;
     width: 100%;
-    height: 70px;
+    height: 5rem;
     flex-direction: row;
     align-items: center;
     background-color: #0a0e16b8;
@@ -43,10 +45,10 @@ header{
     align-items: center;
     gap: 1rem;
     width: 100%;
-    max-width: 1600px;
+    max-width: var(--content-max-width);
 }
 
-#search-wrapper{
+.search-wrapper{
     gap: .4rem;
     min-height: 1.98rem;
     padding: 0 .48rem;
@@ -61,7 +63,79 @@ header{
     max-width: 700px;
 }
 
-#search-wrapper > input{
+.world-search{
+    width: 100%;
+    max-width: 200px;
+    cursor: pointer;
+    position: relative;
+}
+
+.world-search > .dropdown-icon {
+    stroke: var(--text-muted);
+    color: var(--text-muted);
+    transition: stroke 0.1s ease-in-out, fill 0.1s ease-in-out;
+    cursor: pointer;
+}
+.world-search > .dropdown-icon > polygon {
+    fill: var(--text-muted);
+    transition: stroke 0.1s ease-in-out, fill 0.1s ease-in-out;
+}
+
+.world-search:hover > .dropdown-icon {
+    fill: var(--text-primary);
+    stroke: var(--text-primary);
+    transition: stroke 0.1s ease-in-out, fill 0.1s ease-in-out;
+}
+.world-search:hover > .dropdown-icon > polygon {
+    fill: var(--text-primary);
+    transition: stroke 0.1s ease-in-out, fill 0.1s ease-in-out;
+}
+
+
+@supports (color:color-mix(in lab, red, red)) {
+    .dropdown-menu {
+        background:
+                color-mix(in srgb, var(--surface-1) 96%, transparent);
+        box-shadow: 0 16px 32px
+        color-mix(in srgb, var(--shadow) 90%, transparent);
+        border: 1px solid
+        color-mix(in srgb, var(--line-soft) 92%, transparent);
+    }
+}
+
+.dropdown-menu {
+    position: absolute;
+
+    /* 📐 ALIGNMENT MECHANICS */
+    /* top: 100% aligns it flush with the bottom border of the search bar */
+    top: calc(100% + 0.34rem);
+    left: 0;
+
+    /* 🚀 SPANNING THE BAR: If you want the menu to stretch exactly as wide
+       as your entire search bar input, set width to 100% */
+    width: 100%;
+    box-sizing: border-box; /* Crucial so padding doesn't push it wider than 100% */
+
+    z-index: 130;
+    display: grid;
+    gap: 0.2rem;
+    padding: 0.35rem;
+
+    /* Responsive safety rails */
+    max-height: 350px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    /* Styling & Theme */
+    background: var(--surface-1);
+    border: 1px solid var(--line-soft);
+    border-radius: 0.7rem;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+}
+
+
+
+.search-wrapper > input{
     color: var(--text-muted);
     background: 0 0;
     border: none;
@@ -70,19 +144,39 @@ header{
     width: 100%;
     font-size: .86rem;
 }
-#search-wrapper:focus-within{
+.search-wrapper:focus-within{
     border-color: var(--accent);
     transition: border-color 0.4s ease-in-out;
 }
-#search-wrapper:not(:focus-within){
+.search-wrapper:not(:focus-within){
     border-color: var(--line-soft);
     transition: border-color 0.2s ease-in-out;
 }
-#search-wrapper > input:focus{
+.search-wrapper > input:focus{
     color: var(--text-primary);
 }
-#search-wrapper > input::placeholder{
+.search-wrapper > input::placeholder{
     color: var(--text-muted);
+}
+
+.world-search.active{
+    border-color: var(--accent);
+    transition: border-color 0.4s ease-in-out;
+}
+.world-search:not(.active){
+    border-color: var(--line-soft);
+    transition: border-color 0.2s ease-in-out;
+}
+/* 3. Focus State (Placed last so it overrides hover when active) */
+.world-search.active > .dropdown-icon {
+    fill: var(--accent);
+    stroke: var(--accent);
+    color: var(--accent);
+    transition: stroke 0.1s ease-in-out, fill 0.1s ease-in-out;
+}
+.world-search.active > .dropdown-icon > polygon {
+    fill: var(--accent);
+    transition: stroke 0.1s ease-in-out, fill 0.1s ease-in-out;
 }
 
 
@@ -94,15 +188,24 @@ header{
     font-optical-sizing: auto;
     padding-left: 1rem;
 }
+#logo>img{
+    height: 3rem;
+    width:auto;
+}
 
 body{
+    min-height: 100vh;
+    min-height: 100dvh; /* Smooth handling for mobile browser search bars */
+
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 0; /* Clear default margins to prevent overflow bugs */
+
     font-family: Futura, sans-serif;
-    background: radial-gradient(circle at 14% 18%,
-    color-mix(in srgb, var(--bg-grad-3) 70%, transparent) 0, transparent 42%), radial-gradient(circle at 87% 24%,
-    color-mix(in srgb, var(--accent) 18%, transparent) 0, transparent 34%), linear-gradient(160deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 60%, var(--bg-grad-3) 100%);
+    background: radial-gradient(circle at 14% 18%, color-mix(in srgb, var(--bg-grad-3) 70%, transparent) 0, transparent 42%),
+    radial-gradient(circle at 87% 24%, color-mix(in srgb, var(--accent) 18%, transparent) 0, transparent 34%),
+    linear-gradient(160deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 60%, var(--bg-grad-3) 100%);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -114,10 +217,10 @@ body{
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: 1600px;
+    max-width: var(--content-max-width);
     position: relative;
     margin: 0;
-    min-height: 100vh;
+    flex: 1 0 auto;
     /*background-color: #181b22;
 
      Creates a faint 24px grid matching your border colors
@@ -468,17 +571,47 @@ input:checked + .slider:before {
 }
 
 footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
+    height: 2rem;
     width: 100%;
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px;
-    box-sizing: border-box;
+    max-width: var(--content-max-width);
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg,var(--surface-2)0%,var(--surface-3)100%);
+    border-radius: 1rem 1rem 0 0;
+    margin: 3.5rem auto 0;
+    color: var(--text-muted);
+    padding: 0.25rem 0 0.25rem;
+    font-size: .75rem;
+    border-bottom: none;
+    flex-shrink: 0;
+    margin: 2.5rem auto 0;
 }
 footer a {
-    color: #ff9f28;
+    color: var(--accent);
     text-decoration: none;
+}
+
+@supports (color:color-mix(in lab, red, red)) {
+    footer {
+        background: linear-gradient(180deg,
+        color-mix(in srgb, var(--surface-2) 94%, var(--accent) 6%) 0%,
+        color-mix(in srgb, var(--surface-3) 96%, transparent) 100%);
+    }
+}
+
+.footer-content{
+    height: 100%;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    display: flex;
+    flex-direction: row;
+}
+.footer-meta-row {
+    padding-bottom: 0;
+    padding-top: 0;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+    color-mix(in srgb, var(--line-soft) 85%, transparent);
 }

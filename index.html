@@ -10,22 +10,32 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&display=swap" rel="stylesheet">
 </head>
+<div class="layout">
+
+</div>
 <header>
     <div id="header-wrapper">
-        <div id="logo">Mogul Widget</div>
+        <div id="logo"><img src="logotest.png"></div>
         <div id="request">
-            <div id="search-wrapper">
+            <div class="search-wrapper">
                 <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search global-search-input-icon" aria-hidden="true"><path d="m21 21-4.34-4.34"></path><circle cx="11" cy="11" r="8"></circle></svg>
-                <input list ="items" id="item-search" placeholder="Enter the name of an item...">
-                <datalist id="items">
-
-                </datalist>
+                <input id="item-search" autocomplete="off" placeholder="Enter the name of a craftable item...">
             </div>
 
-            <label for="world-name">
-                World:
-                <input type="text" id="world-name" value="Raiden">
-            </label>
+            <div class="search-wrapper world-search">
+                <svg width="20" height="20" viewBox="0 0 23 25" aria-hidden="true" stroke-width="2.5" class="lucide lucide-search global-search-input-icon">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="2" y1="12" x2="22" y2="12" />
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                </svg>
+
+                <input id="world-name" autocomplete="off" placeholder="Select a game world..." readonly style="cursor: pointer; user-select: none; pointer-events: all;" >
+
+                <svg viewBox="0 0 24 24" width="40" height="28" aria-hidden="true" class="dropdown-icon">
+                    <polygon points="7,10 17,10 12,15"  fill="rgb(234, 240, 253)"/>
+                </svg>
+
+            </div>
             <div id="item-buttons"><button id="add-item">Add Item</button></div>
 
         </div>
@@ -38,6 +48,13 @@
 </body>
 <script type="module" src="index.js"></script>
 <footer>
-    Powered by <a href="https://universalis.app">Universalis</a> | <a href="https://www.garlandtools.org">Garland Tools</a> | <a href="https://v2.xivapi.com">XIVAPI</a>
+        <div class="footer-content">
+            <p class = "footer-meta-row">
+                Powered by <a href="https://universalis.app">Universalis</a> | <a href="https://www.garlandtools.org">Garland Tools</a> | <a href="https://v2.xivapi.com">XIVAPI</a>
+            </p>
+            <p class = "footer-meta-row" style="margin-left:auto">
+                Final Fantasy XIV names, icons and assets are property of Square Enix. Mogul Widget is an unofficial fan project and is not affiliated with Square Enix.
+
+        </div>
 </footer>
 </html>

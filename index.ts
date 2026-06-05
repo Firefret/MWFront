@@ -1,5 +1,6 @@
 import {newEndeavor} from "./requests.js";
-import type {Endeavor, Wishlist} from "./types.js";
+import {dcFetch} from "./backgroundFetch.js"
+import type {Endeavor, Wishlist, DataCenter} from "./types.js";
 
 function newEndeavorItem(itemName:string): HTMLDivElement{
     let item = document.createElement("div");
@@ -419,10 +420,73 @@ async function submitHandler(evt: MouseEvent){
     }
 }
 
+function populateWorlds(dcs: DataCenter[]){
+    let dropdown = document.querySelector(".world-search") as HTMLDivElement;
+    let arrow = dropdown.querySelector(".dropdown-icon") as HTMLElement;
+    dropdown.addEventListener("click", (evt:Event) => {
+        evt.preventDefault();
+        let contentBox = document.querySelector(".dropdown-menu") as HTMLElement;
+        if (contentBox && !(evt.target as Element).classList.contains("dropdown-option")){
+            contentBox.remove();
+            dropdown.classList.remove("active");
+            return;
+        }
+        if((evt.target as Element).classList.contains("dropdown-option")){
+            console.log((evt.target as HTMLDivElement).innerText);
+            contentBox.remove();
+            dropdown.classList.remove("active");
+            return;
+            //todo:continue here, make options clickable
+        }
+        dropdown.classList.add("active");
+        contentBox = document.createElement("div");
+        contentBox.className="dropdown-menu";
+        dropdown.appendChild(contentBox);
+        console.log(dcs);
+        dcs.forEach(dc => {
+            let option = document.createElement("div");
+            option.className = "dropdown-option";
+            option.innerText = dc.name;
+            contentBox.append(option);
+            })
+        contentBox.addEventListener("click", (evt) => {
+
+        })
+
+        console.log("event fired");
+        //todo:continue here
+    })
+}
 
 
+document.addEventListener('click', (event:Event) => {
+    const dropdownMenu = document.querySelector('.dropdown-menu') as HTMLElement;
+    const worldSearch = document.querySelector('.search-wrapper.world-search') as HTMLElement;
+    // 🎯 event.target is the exact HTML element the user's mouse clicked on
+
+    // Check if the click happened INSIDE the search wrapper box
+    let target = event.target as HTMLElement;
+    let isClickInside = false;
+    console.log(target);
+    console.log(dropdownMenu);
+    if (worldSearch.contains(target) || worldSearch == target || target.className == "dropdown-option" || target.className == "dropdown-menu") {
+        isClickInside = true;
+    }
+    console.log(isClickInside);
+    if (!isClickInside) {
+        // 🚀 The user clicked anywhere else!
+        // Put your "Close Dropdown" logic here:
+        dropdownMenu.remove();
+        worldSearch.classList.remove("active");
+        console.log("Clicked outside! Closing menu...");
+    }
+});
 
 let addItemButton = document.getElementById("add-item") as HTMLButtonElement;
 addItemButton.addEventListener("click", addItemHandler)
 let itemDatalist = document.getElementById("items") as HTMLInputElement;
-itemTestAutofill(itemDatalist);
+//itemTestAutofill(itemDatalist);
+
+let dataCenters = await dcFetch() as DataCenter[]; //abstract that into a web server cron job or something in future, regurarly fetch server data, save in file, read the file
+console.log(dataCenters);
+populateWorlds(dataCenters);
